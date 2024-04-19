@@ -16,9 +16,9 @@ class Program
         var data = File.ReadAllLines(path);
         var properties = new Dictionary<string, string>();
 
-        for (int i = 0; i < data.Length; i++)
+        foreach (var line in data)
         {
-            var splittedData = data[i].Split(':');
+            var splittedData = line.Split(':');
             properties.Add(splittedData[0], splittedData[1]);
         }
 
@@ -29,17 +29,17 @@ class Program
     {
         var propertyInfos = person.GetType().GetProperties();
 
-        for (int i = 0; i < propertyInfos.Length; i++)
+        foreach (var propertyInfo in propertyInfos)
         {
-            if (data.ContainsKey(propertyInfos[i].Name))
+            if (data.ContainsKey(propertyInfo.Name))
             {
                 try
                 {
-                    var propertyType = propertyInfos[i].PropertyType;
-                    var convertedValue = Convert.ChangeType(data[propertyInfos[i].Name], propertyType);
-                    propertyInfos[i].SetValue(person, convertedValue, null);
+                    var propertyType = propertyInfo.PropertyType;
+                    var convertedValue = Convert.ChangeType(data[propertyInfo.Name], propertyType);
+                    propertyInfo.SetValue(person, convertedValue, null);
                 }
-                catch (FormatException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
