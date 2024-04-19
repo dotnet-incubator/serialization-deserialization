@@ -6,9 +6,11 @@ class Program
 {
     static void Main()
     {
-        var person = new Person { Name = "Alex", Surname = "Great", Born = 356 };
+        var personProperties = ReadDataFile("alex_great.txt");
+        var person = new Person();
+        SetClassProperties(person, personProperties);
 
-        SerializePersonProperties(person, "alex_great2.txt");
+        SerializeClassProperties(person, "alex_great_new.txt");
     }
 
     static Dictionary<string, string> ReadDataFile(string path)
@@ -25,9 +27,9 @@ class Program
         return properties;
     }
 
-    static void SetPersonProperties(Person person, Dictionary<string, string> data)
+    static void SetClassProperties<T>(T objectToDeserialize, Dictionary<string, string> data) where T : class
     {
-        var propertyInfos = person.GetType().GetProperties();
+        var propertyInfos = objectToDeserialize.GetType().GetProperties();
 
         foreach (var propertyInfo in propertyInfos)
         {
@@ -37,7 +39,7 @@ class Program
                 {
                     var propertyType = propertyInfo.PropertyType;
                     var convertedValue = Convert.ChangeType(data[propertyInfo.Name], propertyType);
-                    propertyInfo.SetValue(person, convertedValue, null);
+                    propertyInfo.SetValue(objectToDeserialize, convertedValue, null);
                 }
                 catch (Exception ex)
                 {
@@ -47,14 +49,14 @@ class Program
         }
     }
 
-    static void SerializePersonProperties(Person person, string filePath)
+    static void SerializeClassProperties<T>(T objectToSerialize, string filePath) where T : class
     {
-        var properties = person.GetType().GetProperties();
+        var properties = objectToSerialize.GetType().GetProperties();
         var stringBuilder = new StringBuilder();
 
         foreach (var property in properties)
         {
-            stringBuilder.AppendLine($"{property.Name}:{property.GetValue(person, null)}");
+            stringBuilder.AppendLine($"{property.Name}:{property.GetValue(objectToSerialize, null)}");
         }
 
         File.AppendAllText(filePath, stringBuilder.ToString());
