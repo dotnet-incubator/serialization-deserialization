@@ -1,7 +1,6 @@
 ﻿namespace SerializationDeserialization;
 
-[Serializable]
-public class Person
+class Person
 {
     public string Name { get; set; } = null!;
     public string Surname { get; set; } = null!;

@@ -2,23 +2,23 @@
 
 namespace SerializationDeserialization;
 
-internal class Program
+class Program
 {
     static void Main()
     {
-        Person person = new Person() { Name = "Alex", Surname = "Great", Born = 356 };
+        var person = new Person { Name = "Alex", Surname = "Great", Born = 356 };
 
         SerializePersonProperties(person, "alex_great2.txt");
     }
 
     static Dictionary<string, string> ReadDataFile(string path)
     {
-        string[] data = File.ReadAllLines(path);
-        Dictionary<string, string> properties = new Dictionary<string, string>();
+        var data = File.ReadAllLines(path);
+        var properties = new Dictionary<string, string>();
 
         for (int i = 0; i < data.Length; i++)
         {
-            string[] splittedData = data[i].Split(':');
+            var splittedData = data[i].Split(':');
             properties.Add(splittedData[0], splittedData[1]);
         }
 
@@ -35,7 +35,7 @@ internal class Program
             {
                 try
                 {
-                    Type propertyType = propertyInfos[i].PropertyType;
+                    var propertyType = propertyInfos[i].PropertyType;
                     var convertedValue = Convert.ChangeType(data[propertyInfos[i].Name], propertyType);
                     propertyInfos[i].SetValue(person, convertedValue, null);
                 }
